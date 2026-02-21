@@ -4,9 +4,9 @@ import { base, chainWebpack, conventionRoutes, links, metas, proxy, srcTranspile
 
 export default defineConfig({
 	mfsu: { esbuild: false, strategy: 'eager', exclude: [] },
-	srcTranspiler: 'babel',
+	srcTranspiler: 'swc',
 	srcTranspilerOptions,
-	jsMinifier: 'esbuild',
+	jsMinifier: 'swc',
 	npmClient: 'pnpm',
 	base,
 	publicPath: base,
