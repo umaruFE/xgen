@@ -1,0 +1,54 @@
+name: Build Test
+
+on:
+      push:
+            branches:
+                  - main
+            paths-ignore:
+                  - README.md
+                  - LICENSE
+
+jobs:
+      Build:
+            runs-on: ubuntu-latest
+            if: "!contains(github.event.head_commit.message, '[skip build]')"
+            steps:
+                  - name: Checkout Repo
+                    uses: actions/checkout@master
+
+                  - name: Setup Node.js
+                    uses: actions/setup-node@v3
+                    with:
+                          node-version: 18
+
+                  - name: Setup Pnpm
+                    uses: pnpm/action-setup@v2
+                    with:
+                          version: latest
+                          run_install: false
+
+                  - name: Get pnpm store directory
+                    id: pnpm-cache
+                    shell: bash
+                    run: |
+                          echo "STORE_PATH=$(pnpm store path)" >> $GITHUB_OUTPUT
+
+                  - uses: actions/cache@v3
+                    name: Setup pnpm cache
+                    with:
+                          path: ${{ steps.pnpm-cache.outputs.STORE_PATH }}
+                          key: ${{ runner.os }}-pnpm-store-${{ hashFiles('**/pnpm-lock.yaml') }}
+                          restore-keys: |
+                                ${{ runner.os }}-pnpm-store-
+
+                  - name: Install
+                    run: pnpm install --no-frozen-lockfile
+
+                  - name: Inspect editorjs_plugins dependencies
+                    run: cd packages/editorjs_plugins && pnpm ls
+
+                  - name: Inspect xgen dependencies
+                    run: cd packages/xgen && pnpm ls
+
+                  - name: Test Build
+                    run: pnpm run build

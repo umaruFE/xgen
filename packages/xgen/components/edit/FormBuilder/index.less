@@ -1,0 +1,233 @@
+._local {
+	:global {
+		position: relative;
+		background-color: var(--color_bg_nav);
+		min-height: 300px;
+		border-radius: var(--radius);
+		display: flex;
+
+		.react-grid-item > .react-resizable-handle::after {
+			border: 0;
+		}
+
+		.react-grid-item:hover > .react-resizable-handle::after {
+			content: '';
+			position: absolute;
+			right: 3px;
+			bottom: 3px;
+			width: 5px;
+			height: 5px;
+			border-right: 2px solid var(--color_main);
+			border-bottom: 2px solid var(--color_main);
+		}
+
+		.react-grid-item.react-grid-placeholder {
+			background: var(--color_main);
+			opacity: 0.2;
+			transition-duration: 100ms;
+			z-index: 2;
+			-webkit-user-select: none;
+			-moz-user-select: none;
+			-ms-user-select: none;
+			-o-user-select: none;
+			user-select: none;
+			border-radius: var(--radius);
+		}
+
+		.title-bar {
+			transition: width 0.3s ease;
+		}
+
+		.toggle-sidebar {
+			position: absolute;
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			cursor: pointer;
+			background: var(--color_bg);
+			border-top-right-radius: var(--radius);
+			border-bottom-right-radius: var(--radius);
+			height: 32px;
+			width: 16px;
+			transition: background-color 0.3s;
+			right: -16px;
+			z-index: 1;
+
+			&:hover {
+				background: var(--color_bg_menu);
+			}
+		}
+
+		.sidebar {
+			display: flex;
+			flex-direction: column;
+			width: 200px;
+			margin: 12px 0;
+			transition: width 0.3s ease;
+			border-right: 1px solid var(--color_border_soft);
+
+			&.collapsed {
+				width: 0;
+				border-right: none;
+			}
+
+			.content {
+				background-color: var(--color_bg_nav);
+				height: 100%;
+				overflow-y: auto;
+				flex: 1;
+
+				&::-webkit-scrollbar {
+					width: 6px;
+				}
+				&::-webkit-scrollbar-thumb {
+					background-color: var(--color_title_grey);
+					border-radius: 3px;
+				}
+
+				&::-webkit-scrollbar-thumb:hover {
+					background-color: var(--color_title);
+				}
+			}
+
+			.item {
+				padding: 8px 12px;
+				margin: 0 12px;
+				cursor: pointer;
+				border-radius: var(--radius);
+				background-color: var(--color_bg);
+				margin-bottom: 8px;
+				transition: background-color 0.3s;
+				height: 42px;
+				cursor: move;
+				font-size: 12px;
+				font-weight: 500;
+				display: flex;
+				align-items: center;
+				overflow: hidden;
+				.label {
+					white-space: nowrap;
+					overflow: hidden;
+				}
+				&:hover {
+					background-color: var(--color_bg_menu);
+					color: var(--color_main);
+				}
+			}
+		}
+
+		.head {
+			display: flex;
+			align-items: center;
+			justify-content: space-between;
+			margin: 12px;
+			background: var(--color_bg);
+			border-radius: var(--radius);
+			color: var(--color_title);
+
+			.title {
+				font-size: 14px;
+				font-weight: 500;
+				margin-left: 12px;
+				width: 100%;
+				height: 38px;
+				display: flex;
+				align-items: center;
+				cursor: pointer;
+			}
+
+			.title:hover {
+				color: var(--color_main);
+			}
+
+			.actions {
+				display: flex;
+				justify-content: flex-end;
+				width: 200px;
+			}
+		}
+
+		.canvas {
+			flex: 1;
+			overflow-y: auto;
+			margin-left: 16px;
+			margin-right: 16px;
+			&::-webkit-scrollbar {
+				width: 6px;
+			}
+			&::-webkit-scrollbar-thumb {
+				background-color: var(--color_title_grey);
+				border-radius: 3px;
+			}
+
+			&::-webkit-scrollbar-thumb:hover {
+				background-color: var(--color_title);
+			}
+		}
+
+		.layout {
+			padding: 0;
+		}
+
+		.loading {
+			width: 100%;
+			height: 100%;
+			display: flex;
+			align-items: center;
+			padding: 40px;
+		}
+
+		.field {
+			display: flex;
+			position: relative;
+			align-items: center;
+			justify-content: space-between;
+			padding: 0 12px;
+			border-radius: var(--radius);
+			background-color: var(--color_bg);
+			font-size: 12px;
+			font-weight: 500;
+
+			.drag-handle {
+				cursor: default;
+				-webkit-user-select: none;
+				user-select: none;
+				// overflow: hidden;
+
+				white-space: nowrap;
+				overflow: hidden;
+			}
+
+			.setting {
+				width: auto;
+				margin-right: 8px;
+				display: flex;
+				align-items: right;
+				-webkit-user-select: none;
+				user-select: none;
+				i {
+					display: inline-flex;
+					align-items: center;
+					margin-left: 6px;
+					cursor: pointer;
+				}
+				i:hover {
+					color: var(--color_main);
+				}
+			}
+			div {
+				display: flex;
+				width: 100%;
+				align-items: center;
+			}
+		}
+
+		.field:hover {
+			background-color: var(--color_bg_menu);
+		}
+
+		.field.active {
+			background-color: var(--color_bg_menu);
+		}
+	}
+}

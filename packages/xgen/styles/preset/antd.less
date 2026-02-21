@@ -1,0 +1,198 @@
+.xgen-input,
+.xgen-input-number,
+.xgen-input-affix-wrapper,
+.xgen-select-selector {
+	border: none !important;
+}
+
+.anticon {
+	&.xgen-input-clear-icon {
+		color: var(--color_text) !important;
+	}
+}
+
+.xgen-btn {
+	&.no_text {
+		i {
+			margin-right: 0;
+		}
+	}
+
+	i {
+		margin-right: 3px;
+	}
+}
+
+// message
+.important_message {
+	top: initial;
+	bottom: 8px;
+
+	.xgen-message-notice {
+		padding: 8px 16px;
+		text-align: right;
+
+		&-content {
+			border: 1px solid var(--color_border);
+		}
+	}
+}
+
+.xgen-message {
+	.important_message() !important;
+}
+
+// Mentions
+.xgen-mentions {
+	textarea {
+		background-color: transparent !important;
+	}
+}
+
+// Modal
+[data-theme='dark'] {
+	.xgen-modal-mask {
+		background-color: rgba(0, 0, 0, 0.6);
+	}
+
+	.custom_modal {
+		.xgen-modal {
+			&-header {
+				background-color: fade(white, 3%);
+			}
+		}
+	}
+}
+
+.xgen-modal-mask {
+	backdrop-filter: blur(24px);
+}
+
+.custom_modal {
+	.xgen-modal {
+		&-title {
+			color: var(--color_text);
+			font-size: 15px;
+		}
+
+		&-close {
+			color: var(--color_text_grey);
+
+			&:hover {
+				color: var(--color_text_contrast);
+			}
+		}
+
+		&-header {
+			padding: 16px 20px;
+			border-bottom: 1px solid var(--color_border_soft);
+			background-color: fade(black, 1%);
+		}
+
+		&-content {
+			overflow: hidden;
+			border-radius: var(--radius);
+		}
+
+		&-body {
+			padding: 0;
+		}
+	}
+}
+
+// Popover
+[data-theme='dark'] {
+	.xgen-popover {
+		.xgen-popover-arrow {
+			.xgen-popover-arrow-content {
+				background-color: var(--color_bg_nav);
+			}
+		}
+
+		.xgen-popover-inner {
+			background-color: var(--color_bg_nav);
+		}
+	}
+}
+
+.xgen-popover {
+	.xgen-popover-arrow {
+		overflow: visible;
+
+		.xgen-popover-arrow-content {
+			width: 8px;
+			height: 8px;
+			border-radius: 2px;
+			background-color: var(--color_bg_menu);
+			box-shadow: var(--shadow);
+
+			&::before {
+				display: none;
+			}
+		}
+	}
+
+	.xgen-popover-inner {
+		background-color: var(--color_bg_menu);
+	}
+}
+
+// Tooltip
+.xgen-tooltip {
+	.xgen-tooltip-arrow {
+		.xgen-tooltip-arrow-content {
+			box-shadow: var(--shadow);
+		}
+	}
+}
+
+// Pagination
+.xgen-pagination {
+	position: relative;
+
+	.xgen-pagination-options {
+		position: absolute;
+		left: 0;
+		margin: 0;
+	}
+
+	.xgen-pagination-total-text {
+		margin-right: 15px;
+	}
+}
+
+// Form
+.xgen-form-item {
+	.xgen-form-item-control-input {
+		border-radius: var(--radius);
+		background-color: var(--color_bg_nav);
+	}
+}
+
+// DatePicker
+.xgen-picker-panel-container {
+	background-color: var(--color_bg_menu) !important;
+
+	.xgen-picker-panel {
+		border-bottom: none;
+	}
+}
+
+// Dropdown
+[data-theme='dark'] {
+	.xgen-select-dropdown {
+		background-color: var(--color_bg_nav) !important;
+	}
+	.xgen-dropdown-menu-item:hover {
+		background-color: var(--color_bg_nav_hover) !important;
+	}
+}
+
+.xgen-select-dropdown {
+	padding: 0 !important;
+	background-color: var(--color_bg_nav) !important;
+}
+
+.xgen-dropdown-menu-item:hover {
+	background-color: var(--color_bg_nav_hover) !important;
+}

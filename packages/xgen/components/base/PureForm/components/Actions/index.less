@@ -1,0 +1,69 @@
+._local {
+	width: 100%;
+
+	&.stick {
+		transform: translateX(20px);
+	}
+
+	:global {
+		.btn_action {
+			margin-left: 12px;
+			min-width: 80px;
+
+			&.primary {
+				background-color: var(--color_main);
+				color: white;
+				border: none;
+
+				&:hover {
+					filter: brightness(1.1);
+				}
+			}
+
+			&.success {
+				background-color: var(--color_success);
+				color: white;
+				border: none;
+
+				&:hover {
+					filter: brightness(1.1);
+				}
+			}
+
+			&.warning {
+				background-color: var(--color_warning);
+				color: white;
+				border: none;
+
+				&:hover {
+					filter: brightness(1.1);
+				}
+			}
+
+			&.danger {
+				background-color: var(--color_danger);
+				color: white;
+				border: none;
+
+				&:hover {
+					filter: brightness(1.1);
+				}
+			}
+
+			&.disabled {
+				opacity: 0.4;
+			}
+
+			i {
+				margin-right: 3px;
+			}
+		}
+
+		.divide_line {
+			width: 1px;
+			height: 21px;
+			margin-left: 12px;
+			background-color: var(--color_border);
+		}
+	}
+}

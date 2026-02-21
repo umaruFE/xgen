@@ -1,0 +1,155 @@
+.plan {
+	display: flex;
+	flex-direction: column;
+	width: 100%;
+	color: var(--color_text_grey);
+	font-size: 12px;
+}
+
+.header {
+	display: flex;
+	flex-direction: column;
+	gap: 4px;
+	padding: 4px 0 8px;
+	border-bottom: 1px solid var(--color_border_soft);
+}
+
+.progress {
+	color: var(--color_text_grey);
+	font-size: 12px;
+	display: flex;
+	gap: 4px;
+	align-items: center;
+	min-height: 24px;
+}
+
+.icon {
+	color: inherit;
+	display: flex;
+	align-items: center;
+	line-height: 1;
+}
+
+.content_wrapper {
+	padding: 8px 0;
+	display: flex;
+	flex-direction: column;
+	gap: 4px;
+}
+
+.description {
+	color: var(--color_text_grey);
+}
+
+.tasks {
+	display: flex;
+	flex-direction: column;
+	gap: 4px;
+}
+
+.task {
+	display: flex;
+	align-items: center;
+	gap: 8px;
+	padding: 4px;
+	border-radius: 4px;
+	transition: all 0.2s;
+
+	&:hover {
+		background: var(--color_fill_quaternary);
+	}
+}
+
+.status {
+	width: 16px;
+	height: 16px;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	flex-shrink: 0;
+	position: relative;
+
+	&::before {
+		content: '';
+		width: 6px;
+		height: 6px;
+		border-radius: 50%;
+		position: absolute;
+	}
+
+	&.created::before {
+		background: var(--color_dot);
+	}
+
+	&.running::before {
+		background: var(--color_warning);
+		animation: pulse 2s infinite;
+	}
+
+	&.completed {
+		color: var(--color_success);
+		&::before {
+			display: none;
+		}
+		&::after {
+			content: '✓';
+			font-size: 12px;
+		}
+	}
+
+	&.failed {
+		color: var(--color_error);
+		&::before {
+			display: none;
+		}
+		&::after {
+			content: '✕';
+			font-size: 12px;
+		}
+	}
+
+	&.destroyed::before {
+		background: var(--color_text_grey);
+	}
+
+	&.cancelled {
+		color: var(--color_text_grey);
+		&::before {
+			display: none;
+		}
+		&::after {
+			content: '⊘';
+			font-size: 14px;
+			opacity: 0.5;
+		}
+	}
+}
+
+.content {
+	display: flex;
+	align-items: center;
+	gap: 8px;
+	flex: 1;
+
+	.title {
+		flex: 1;
+		color: var(--color_text_grey);
+	}
+
+	.order {
+		color: var(--color_text_quaternary);
+		font-size: 11px;
+	}
+}
+
+@keyframes pulse {
+	0% {
+		opacity: 0.4;
+	}
+	50% {
+		opacity: 1;
+	}
+	100% {
+		opacity: 0.4;
+	}
+}

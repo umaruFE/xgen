@@ -1,0 +1,84 @@
+._local {
+	max-width: 100%;
+	min-width: 0;
+	width: 100%;
+	overflow-x: auto;
+
+	:global(._newline) {
+		margin-bottom: 12px !important;
+	}
+
+	:global(.error) {
+		color: var(--color_danger);
+	}
+
+	:global(p) {
+		padding: 0 !important;
+		margin: 0 !important;
+		margin-block: 0 !important;
+		line-height: 24px;
+		overflow-wrap: break-word;
+		word-break: break-word;
+	}
+
+	:global(table) {
+		width: 100%;
+		margin: 12px 0;
+		background-color: var(--color_bg_menu);
+		border-collapse: collapse;
+
+		:global(th) {
+			text-align: center;
+			padding: 8px 12px;
+			border: 1px solid var(--color_border_light);
+			line-height: 1.5;
+			vertical-align: middle;
+			white-space: nowrap;
+			background-color: var(--color_bg_menu);
+		}
+
+		:global(td) {
+			text-align: left;
+			padding: 8px 12px;
+			border: 1px solid var(--color_border_light);
+			line-height: 1.5;
+			vertical-align: top;
+			background-color: var(--color_bg_menu);
+		}
+
+		:global(._newline) {
+			display: none;
+		}
+	}
+
+	:global(pre) {
+		margin: 0;
+		width: 100%;
+		min-width: 0;
+		overflow: hidden;
+		white-space: pre-wrap;
+	}
+
+	:global(ul),
+	:global(ol) {
+		margin: 8px 0;
+		padding-left: 24px;
+
+		:global(li) {
+			margin: 4px 0;
+		}
+	}
+
+	:global(blockquote) {
+		margin: 12px 0;
+		padding-left: 12px;
+		border-left: 4px solid var(--color_border_light);
+		color: var(--color_text_secondary);
+	}
+
+	:global(hr) {
+		margin: 16px 0;
+		border: none;
+		border-top: 1px solid var(--color_border_light);
+	}
+}

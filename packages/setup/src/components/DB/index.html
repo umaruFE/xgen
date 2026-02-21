@@ -1,0 +1,71 @@
+<form
+      id="form_db"
+      class="form flex_column"
+>
+      {#each Object.entries(metadata_connector) as [key, item]}
+      <div class="form_item flex flex_column">
+            <div class="flex justify_between">
+                  <span class="name">{item.name}</span>
+                  <span class="key">{key}</span>
+            </div>
+            <DynamicValue
+                  name="{key}"
+                  type="{item.value}"
+                  value="{item.default}"
+            ></DynamicValue>
+      </div>
+      {/each}
+
+      {#each Object.entries(metadata_connector_options[type]) as [key, item]}
+      <div class="form_item flex flex_column">
+            <div class="flex justify_between">
+                  <span class="name">{item.name}</span>
+                  <span class="key">{key}</span>
+            </div>
+            <DynamicValue
+                  name="{key}"
+                  type="{item.value}"
+                  parent="option"
+                  value="{item.default}"
+            ></DynamicValue>
+      </div>
+      {/each}
+
+      <div class="w_100 flex justify_between">
+            <button
+                  class="btn_test btn_action cursor_point flex justify_center align_center"
+                  on:click="{check}"
+            >
+                  {#if loading_check}
+                  <div class="lds-ring small mr_6">
+                        <div></div>
+                        <div></div>
+                        <div></div>
+                        <div></div>
+                  </div>
+                  测试连接中
+                  {:else}
+                  <i class="icon-wifi mr_6"></i>测试连接
+                  {/if}
+            </button>
+            <div class="flex">
+                  <button
+                        class="btn_back btn_action cursor_point mr_12"
+                        on:click="{back}"
+                  >
+                        <i class="icon-chevron-left"></i>
+                  </button>
+                  <button
+                        class="btn_save btn_action cursor_point"
+                        on:click="{setup}"
+                  >
+                        <i class="icon-check"></i>
+                  </button>
+            </div>
+      </div>
+
+
+      {#if info}
+      <div class="info">{info}</div>
+      {/if}
+</form>

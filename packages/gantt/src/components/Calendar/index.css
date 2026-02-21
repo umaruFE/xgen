@@ -1,0 +1,27 @@
+._local {
+	:global {
+		.calendarBottomText {
+			text-anchor: middle;
+			fill: #333;
+			user-select: none;
+			pointer-events: none;
+		}
+
+		.calendarTopTick {
+			stroke: #e6e4e4;
+		}
+
+		.calendarTopText {
+			text-anchor: middle;
+			fill: #555;
+			user-select: none;
+			pointer-events: none;
+		}
+
+		.calendarHeader {
+			fill: #ffffff;
+			stroke: #e0e0e0;
+			stroke-width: 1.4;
+		}
+	}
+}

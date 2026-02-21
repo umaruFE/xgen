@@ -1,0 +1,43 @@
+._local {
+	&.Upload {
+		:global {
+			.xgen-popover-inner {
+				width: 376px;
+
+				.xgen-popover-inner-content {
+					width: 100%;
+				}
+
+				.xgen-form-item {
+					width: calc(100% - 50px);
+				}
+			}
+		}
+	}
+
+	:global {
+		.xgen-form-item {
+			margin-bottom: 0;
+		}
+
+		.xgen-form-item-label {
+			display: none;
+		}
+
+		.xgen-form-item-control {
+			box-sizing: border-box;
+			border: 1px solid var(--color_border_light);
+			border-radius: 6px;
+		}
+
+		.xgen-input-group-addon {
+			border: none;
+			background-color: var(--color_main);
+			cursor: pointer;
+
+			i {
+				color: white !important;
+			}
+		}
+	}
+}

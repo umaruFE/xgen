@@ -1,0 +1,154 @@
+@import './dark.less';
+@import './compact.less';
+@import './withTotalRow.less';
+@import './in_form.less';
+
+[data-theme='dark'] {
+	._local {
+		:global {
+			.dark();
+		}
+
+		&.compact {
+			:global {
+				.dark_compact();
+			}
+		}
+	}
+}
+
+._local {
+	:global {
+		.xgen-table {
+			::-webkit-scrollbar-thumb {
+				background-color: var(--color_border_light);
+				border-radius: 12px;
+			}
+
+			::-webkit-scrollbar {
+				width: unset;
+				height: 9px;
+			}
+
+			.xgen-table-container {
+				table {
+					border-spacing: 0 6px;
+					border-collapse: separate;
+				}
+			}
+
+			.xgen-table-header {
+				transform: translateY(8px);
+			}
+
+			.xgen-table-thead {
+				tr {
+					th {
+						padding: 0 10px;
+						border: none;
+						font-size: 12px;
+						white-space: nowrap;
+						transition: none !important;
+
+						&:first-child {
+							padding-left: 20px;
+						}
+
+						&:last-child {
+							padding-right: 20px;
+							text-align: right;
+						}
+
+						&::before {
+							display: none !important;
+						}
+
+						&.xgen-table-selection-column {
+							padding-left: 10px;
+						}
+					}
+				}
+			}
+
+			.xgen-table-tbody {
+				tr {
+					&.xgen-table-measure-row {
+						padding: 0;
+					}
+
+					&.xgen-table-row-selected {
+						td {
+							border-color: transparent;
+							background-color: transparent;
+
+							&:first-child,
+							&:last-child {
+								border-color: transparent;
+							}
+						}
+					}
+
+					td {
+						box-sizing: border-box;
+						padding: 8px 10px;
+						height: 68px;
+						border: 1px solid transparent;
+						background-color: var(--color_bg_menu) !important;
+						transition: none !important;
+
+						&:first-child {
+							padding-left: 20px;
+							border-top-left-radius: 6px;
+							border-bottom-left-radius: 6px;
+						}
+
+						&:last-child {
+							padding-right: 12px;
+							border-top-right-radius: 6px;
+							border-bottom-right-radius: 6px;
+							text-align: right;
+						}
+
+						&.xgen-table-selection-column {
+							padding-left: 10px;
+						}
+
+						a {
+							color: var(--color_text);
+						}
+					}
+				}
+			}
+
+			.xgen-table-sticky-holder {
+				background-color: var(--color_bg);
+			}
+
+			.xgen-table-container {
+				border-radius: 0;
+			}
+		}
+	}
+
+	&.compact {
+		:global {
+			.compact();
+		}
+	}
+
+	&.withTotalRow {
+		:global {
+			.withTotalRow();
+		}
+	}
+
+	&.in_form {
+		margin-bottom: 24px;
+		border-radius: 6px;
+		background-color: var(--color_bg_nav);
+
+		:global {
+			.in_form();
+		}
+	}
+}

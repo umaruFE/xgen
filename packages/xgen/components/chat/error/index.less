@@ -1,0 +1,53 @@
+._local {
+	width: 100%;
+	min-width: 0;
+	max-width: 100%;
+	overflow-x: hidden;
+
+	.error_container {
+		display: flex;
+		align-items: center;
+		gap: 8px;
+		padding: 0;
+		margin: 0;
+		color: var(--color_danger);
+
+		.error_text {
+			color: var(--color_danger);
+			font-size: var(--fontsize);
+			line-height: 24px;
+			overflow-wrap: break-word;
+			word-break: break-word;
+			padding: 0;
+			margin: 0;
+		}
+
+		.retry_button {
+			display: inline-flex;
+			align-items: center;
+			justify-content: center;
+			padding: 1px;
+			margin-left: -2px;
+			background: transparent;
+			color: var(--color_danger);
+			border: none;
+			cursor: pointer;
+			transition: all 0.2s ease-out;
+			opacity: 0.6;
+			border-radius: 3px;
+
+			svg {
+				transition: all 0.2s ease-out;
+				transform: scale(1);
+			}
+
+			&:hover {
+				opacity: 1;
+
+				svg {
+					transform: scale(1.15);
+				}
+			}
+		}
+	}
+}
