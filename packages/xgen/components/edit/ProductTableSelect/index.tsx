@@ -5,12 +5,14 @@ import clsx from 'clsx'
 import { observer } from 'mobx-react-lite'
 import { useEffect, useMemo, useState } from 'react'
 
+import { Item } from '@/components'
 import { getLocale } from '@umijs/max'
 
 import styles from './index.less'
 
 import type { SelectProps } from 'antd'
 import type { ColumnsType } from 'antd/es/table'
+import type { Component } from '@/types'
 
 interface ProductItem {
   id: number
@@ -49,9 +51,7 @@ interface PriceField {
   max?: number
 }
 
-interface IProps {
-  __name?: string
-  __bind?: string
+interface IProps extends Component.PropsEditComponent {
   value?: number[] | ProductTableValue[]
   onChange?: (value: ProductTableValue[]) => void
   xProps?: {
@@ -72,7 +72,7 @@ const defaultPriceFields: PriceField[] = [
 ]
 
 const Index = (props: IProps) => {
-  const { __name, __bind, value = [], onChange, xProps, options = [] } = props
+  const { __name, __bind, itemProps, value = [], onChange, xProps, options = [] } = props
   const is_cn = getLocale() === 'zh-CN'
   const priceFields = xProps?.priceFields || defaultPriceFields
   const showSubtotal = xProps?.showSubtotal !== false
@@ -84,21 +84,18 @@ const Index = (props: IProps) => {
   // 解析已选中的商品ID
   const selectedIds = useMemo(() => {
     if (!value || value.length === 0) return []
-    // 如果是对象数组，说明包含 quantity 和 price
     if (typeof value[0] === 'object') {
       return (value as ProductTableValue[]).map((v) => v.product_id)
     }
-    // 如果是数字数组，直接返回
     return value as number[]
   }, [value])
 
-  // 获取商品详情的格式化数据（包含数量和价格）
+  // 获取商品详情的格式化数据
   const productTableValues = useMemo(() => {
     if (!value || value.length === 0) return []
     if (typeof value[0] === 'object') {
       return value as ProductTableValue[]
     }
-    // 如果只是ID数组，初始化数量和价格
     return (value as number[]).map((id) => {
       const item: ProductTableValue = {
         product_id: id,
@@ -130,7 +127,6 @@ const Index = (props: IProps) => {
         const response = await fetch(`${xProps.remote.api}?selected=${ids}`)
         const data = await response.json()
         if (Array.isArray(data)) {
-          // 合并商品详情和数量价格信息
           const merged = data.map((product: ProductItem) => {
             const tableValue = productTableValues.find(
               (v) => v.product_id === product.id || v.product_id === product.value
@@ -155,7 +151,7 @@ const Index = (props: IProps) => {
     }
 
     loadSelectedProducts()
-  }, [selectedIds.length, xProps?.remote?.api, priceFields])
+  }, [selectedIds.length, xProps?.remote?.api, priceFields, productTableValues])
 
   // 远程搜索
   const fetchRemoteOptions = async (keywords: string) => {
@@ -192,11 +188,7 @@ const Index = (props: IProps) => {
       if (!onChange) return
 
       const newIds = ids ? (Array.isArray(ids) ? ids : [ids]) : []
-
-      // 获取现有商品的数量价格信息
       const existingValues = productTableValues.filter((v) => newIds.includes(v.product_id))
-
-      // 为新商品创建默认值
       const newItems: ProductTableValue[] = [...existingValues]
 
       newIds.forEach((productId) => {
@@ -219,11 +211,10 @@ const Index = (props: IProps) => {
     }
   )
 
-  // 更新商品字段（数量、价格等）
+  // 更新字段
   const handleFieldChange = useMemoizedFn(
     (productId: number, fieldKey: string, fieldValue: number) => {
       if (!onChange) return
-
       const newValue = productTableValues.map((item) =>
         item.product_id === productId ? { ...item, [fieldKey]: fieldValue } : item
       )
@@ -235,7 +226,6 @@ const Index = (props: IProps) => {
   const handleRemove = useMemoizedFn(
     (productId: number) => {
       if (!onChange) return
-
       const newValue = productTableValues.filter((item) => item.product_id !== productId)
       onChange(newValue)
     }
@@ -247,11 +237,9 @@ const Index = (props: IProps) => {
       (v) => v.product_id === record.id || v.product_id === record.value
     )
     if (!item) return 0
-
     const quantity = item.quantity || 0
     const price = item.price || 0
     const discount = item.discount ?? 1
-
     return quantity * price * discount
   }
 
@@ -297,7 +285,7 @@ const Index = (props: IProps) => {
         )
       }
     },
-    ...priceFields.map((field): any => ({
+    ...priceFields.map((field) => ({
       title: field.label,
       key: field.key,
       width: field.width || 100,
@@ -352,83 +340,85 @@ const Index = (props: IProps) => {
     }
   ]
 
-  // 过滤掉已选择的选项
+  // 过滤选项
   const availableOptions = useMemo(() => {
     return options.filter((opt) => !selectedIds.includes(opt.value))
   }, [options, selectedIds])
 
-  // 计算总金额
+  // 总计
   const totalAmount = useMemo(() => {
     return selectedProducts.reduce((sum, record) => sum + calculateSubtotal(record), 0)
   }, [selectedProducts])
 
   return (
-    <div className={clsx([styles.product_table_select, 'w_100'])}>
-      <Select
-        mode='multiple'
-        placeholder={
-          xProps?.placeholder || is_cn ? '搜索商品名称/编码/条码' : 'Search by name/code/barcode'
-        }
-        showSearch
-        allowClear
-        filterOption={false}
-        onSearch={handleSearch}
-        onChange={handleChange}
-        options={availableOptions}
-        value={selectedIds}
-        loading={loading}
-        style={{ width: '100%', marginBottom: 8 }}
-        dropdownRender={(menu) => (
+    <Item {...itemProps} {...{ __bind, __name }}>
+      <div className={clsx([styles.product_table_select, 'w_100'])}>
+        <Select
+          mode='multiple'
+          placeholder={
+            xProps?.placeholder || is_cn ? '搜索商品名称/编码/条码' : 'Search by name/code/barcode'
+          }
+          showSearch
+          allowClear
+          filterOption={false}
+          onSearch={handleSearch}
+          onChange={handleChange}
+          options={availableOptions}
+          value={selectedIds}
+          loading={loading}
+          style={{ width: '100%', marginBottom: 8 }}
+          dropdownRender={(menu) => (
+            <>
+              {menu}
+              {searchValue && (
+                <div
+                  style={{
+                    padding: '8px',
+                    cursor: 'pointer',
+                    textAlign: 'center',
+                    color: '#1890ff',
+                    borderTop: '1px solid #f0f0f0'
+                  }}
+                  onMouseDown={(e) => e.preventDefault()}
+                >
+                  <PlusOutlined /> 按回车添加 "{searchValue}"
+                </div>
+              )}
+            </>
+          )}
+        />
+        {selectedProducts.length > 0 && (
           <>
-            {menu}
-            {searchValue && (
+            <Table
+              columns={columns}
+              dataSource={selectedProducts}
+              rowKey={(record) => record.id || record.value}
+              size='small'
+              pagination={false}
+              scroll={{ x: 900 }}
+            />
+            {showSubtotal && (
               <div
                 style={{
-                  padding: '8px',
-                  cursor: 'pointer',
-                  textAlign: 'center',
-                  color: '#1890ff',
-                  borderTop: '1px solid #f0f0f0'
+                  textAlign: 'right',
+                  padding: '12px 16px',
+                  background: '#fafafa',
+                  borderRadius: '0 0 8px 8px',
+                  border: '1px solid #d9d9d9',
+                  borderTop: 'none',
+                  fontWeight: 500,
+                  fontSize: 14
                 }}
-                onMouseDown={(e) => e.preventDefault()}
               >
-                <PlusOutlined /> 按回车添加 "{searchValue}"
+                <ShoppingCartOutlined style={{ marginRight: 8 }} />
+                总计: <span style={{ color: '#ff4d4f', fontSize: 16 }}>¥{totalAmount.toFixed(2)}</span>
               </div>
             )}
           </>
         )}
-      />
-      {selectedProducts.length > 0 && (
-        <>
-          <Table
-            columns={columns}
-            dataSource={selectedProducts}
-            rowKey={(record) => record.id || record.value}
-            size='small'
-            pagination={false}
-            scroll={{ x: 900 }}
-          />
-          {showSubtotal && (
-            <div
-              style={{
-                textAlign: 'right',
-                padding: '12px 16px',
-                background: '#fafafa',
-                borderRadius: '0 0 8px 8px',
-                border: '1px solid #d9d9d9',
-                borderTop: 'none',
-                fontWeight: 500,
-                fontSize: 14
-              }}
-            >
-              <ShoppingCartOutlined style={{ marginRight: 8 }} />
-              总计: <span style={{ color: '#ff4d4f', fontSize: 16 }}>¥{totalAmount.toFixed(2)}</span>
-            </div>
-          )}
-        </>
-      )}
-    </div>
+      </div>
+    </Item>
   )
 }
 
-export default new window.$app.Handle(Index).by(observer).by(window.$app.memo).get()
+export default observer(Index)
