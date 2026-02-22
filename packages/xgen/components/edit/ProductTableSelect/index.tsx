@@ -2,7 +2,6 @@ import { useMemoizedFn } from 'ahooks'
 import { Select, Table, InputNumber, Button, Popconfirm } from 'antd'
 import { DeleteOutlined, PlusOutlined, ShoppingCartOutlined } from '@ant-design/icons'
 import clsx from 'clsx'
-import { observer } from 'mobx-react-lite'
 import { useEffect, useMemo, useState } from 'react'
 
 import { Item } from '@/components'
@@ -12,7 +11,6 @@ import styles from './index.less'
 
 import type { SelectProps } from 'antd'
 import type { ColumnsType } from 'antd/es/table'
-import type { Component } from '@/types'
 
 interface ProductItem {
   id: number
@@ -24,8 +22,6 @@ interface ProductItem {
   spec?: string
   purchase_price?: number
   wholesale_price?: number
-  suggested_price?: number
-  retail_price?: number
   [key: string]: any
 }
 
@@ -33,11 +29,6 @@ interface ProductTableValue {
   product_id: number
   quantity: number
   price: number
-  wholesale_price?: number
-  retail_price?: number
-  suggested_retail_price?: number
-  discount?: number
-  subtotal?: number
   [key: string]: any
 }
 
@@ -51,7 +42,10 @@ interface PriceField {
   max?: number
 }
 
-interface IProps extends Component.PropsEditComponent {
+interface IProps {
+  __name?: string
+  __bind?: string
+  itemProps?: any
   value?: number[] | ProductTableValue[]
   onChange?: (value: ProductTableValue[]) => void
   xProps?: {
@@ -62,7 +56,6 @@ interface IProps extends Component.PropsEditComponent {
     placeholder?: string
     priceFields?: PriceField[]
     showSubtotal?: boolean
-    subtotalFormula?: string
   }
   options?: SelectProps['options']
 }
@@ -81,7 +74,6 @@ const Index = (props: IProps) => {
   const [searchValue, setSearchValue] = useState<string>('')
   const [loading, setLoading] = useState(false)
 
-  // 解析已选中的商品ID
   const selectedIds = useMemo(() => {
     if (!value || value.length === 0) return []
     if (typeof value[0] === 'object') {
@@ -90,28 +82,18 @@ const Index = (props: IProps) => {
     return value as number[]
   }, [value])
 
-  // 获取商品详情的格式化数据
   const productTableValues = useMemo(() => {
     if (!value || value.length === 0) return []
     if (typeof value[0] === 'object') {
       return value as ProductTableValue[]
     }
-    return (value as number[]).map((id) => {
-      const item: ProductTableValue = {
-        product_id: id,
-        quantity: 1,
-        price: 0
-      }
-      priceFields.forEach((field) => {
-        if (field.key !== 'price') {
-          (item as any)[field.key] = 0
-        }
-      })
-      return item
-    })
-  }, [value, priceFields])
+    return (value as number[]).map((id) => ({
+      product_id: id,
+      quantity: 1,
+      price: 0
+    }))
+  }, [value])
 
-  // 加载已选中的商品详情
   useEffect(() => {
     if (selectedIds.length === 0) {
       setSelectedProducts([])
@@ -131,15 +113,11 @@ const Index = (props: IProps) => {
             const tableValue = productTableValues.find(
               (v) => v.product_id === product.id || v.product_id === product.value
             )
-            const item: any = {
+            return {
               ...product,
-              quantity: tableValue?.quantity || 1
+              quantity: tableValue?.quantity || 1,
+              price: tableValue?.price || product.purchase_price || 0
             }
-            priceFields.forEach((field) => {
-              const sourceValue = field.sourceField ? (product as any)[field.sourceField] : undefined
-              item[field.key] = tableValue?.[field.key] ?? sourceValue ?? 0
-            })
-            return item
           })
           setSelectedProducts(merged)
         }
@@ -151,9 +129,8 @@ const Index = (props: IProps) => {
     }
 
     loadSelectedProducts()
-  }, [selectedIds.length, xProps?.remote?.api, priceFields, productTableValues])
+  }, [selectedIds.length, xProps?.remote?.api])
 
-  // 远程搜索
   const fetchRemoteOptions = async (keywords: string) => {
     if (!xProps?.remote?.api) return []
 
@@ -173,7 +150,6 @@ const Index = (props: IProps) => {
     }
   }
 
-  // 处理搜索
   const handleSearch = useMemoizedFn(async (keyword: string) => {
     setSearchValue(keyword)
     if (keyword && xProps?.remote?.api) {
@@ -182,7 +158,6 @@ const Index = (props: IProps) => {
     return []
   })
 
-  // 处理选择变化
   const handleChange = useMemoizedFn(
     (ids: number[] | number | null) => {
       if (!onChange) return
@@ -194,16 +169,11 @@ const Index = (props: IProps) => {
       newIds.forEach((productId) => {
         if (!existingValues.some((v) => v.product_id === productId)) {
           const product = selectedProducts.find((p) => p.id === productId || p.value === productId)
-          const item: ProductTableValue = {
+          newItems.push({
             product_id: productId,
             quantity: 1,
-            price: 0
-          }
-          priceFields.forEach((field) => {
-            const sourceValue = product ? (product as any)[field.sourceField || field.key] : 0
-            ;(item as any)[field.key] = sourceValue ?? 0
+            price: product?.purchase_price || 0
           })
-          newItems.push(item)
         }
       })
 
@@ -211,7 +181,6 @@ const Index = (props: IProps) => {
     }
   )
 
-  // 更新字段
   const handleFieldChange = useMemoizedFn(
     (productId: number, fieldKey: string, fieldValue: number) => {
       if (!onChange) return
@@ -222,7 +191,6 @@ const Index = (props: IProps) => {
     }
   )
 
-  // 移除商品
   const handleRemove = useMemoizedFn(
     (productId: number) => {
       if (!onChange) return
@@ -231,19 +199,14 @@ const Index = (props: IProps) => {
     }
   )
 
-  // 计算小计
   const calculateSubtotal = (record: ProductItem) => {
     const item = productTableValues.find(
       (v) => v.product_id === record.id || v.product_id === record.value
     )
     if (!item) return 0
-    const quantity = item.quantity || 0
-    const price = item.price || 0
-    const discount = item.discount ?? 1
-    return quantity * price * discount
+    return (item.quantity || 0) * (item.price || 0)
   }
 
-  // 表格列定义
   const columns: ColumnsType<ProductItem> = [
     {
       title: '商品名称',
@@ -251,7 +214,7 @@ const Index = (props: IProps) => {
       key: 'name',
       width: 150,
       ellipsis: true,
-      render: (_, record) => record.name || record.label
+      render: (_: any, record: ProductItem) => record.name || record.label
     },
     {
       title: '编码',
@@ -270,7 +233,7 @@ const Index = (props: IProps) => {
       key: 'quantity',
       width: 80,
       align: 'center',
-      render: (_, record) => {
+      render: (_: any, record: ProductItem) => {
         const item = productTableValues.find(
           (v) => v.product_id === record.id || v.product_id === record.value
         )
@@ -340,12 +303,10 @@ const Index = (props: IProps) => {
     }
   ]
 
-  // 过滤选项
   const availableOptions = useMemo(() => {
     return options.filter((opt) => !selectedIds.includes(opt.value))
   }, [options, selectedIds])
 
-  // 总计
   const totalAmount = useMemo(() => {
     return selectedProducts.reduce((sum, record) => sum + calculateSubtotal(record), 0)
   }, [selectedProducts])
@@ -421,4 +382,4 @@ const Index = (props: IProps) => {
   )
 }
 
-export default observer(Index)
+export default Index
